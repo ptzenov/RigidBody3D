@@ -3,6 +3,8 @@
 
 #include <Ogre.h>
 
+#include <ois/OIS.h>
+
 #include <memory>
 #include <map>
 
@@ -40,6 +42,7 @@ private:
         std::map<std::string,Ogre::Entity*> entities;
         std::map<std::string,Ogre::Camera*> cameras;
         std::map<std::string,Ogre::Light*> light_sources;
+	std::map<std::string,std::unique_ptr<Ogre::FrameListener>> frame_listeners;
 
         Ogre::String resources;
         Ogre::String app_name;
@@ -47,8 +50,23 @@ private:
 };
 
 
+class InputController: public Ogre::FrameListener
+{
+public:
+	InputController(Ogre::SceneNode* nde, Ogre::RenderWindow* win);
+	// this is the method launched at framestarted! Must return ture to continue; otherwise exit  
+	bool frameStarted(const Ogre::FrameEvent & evt); // evt.timeSinceLastFrame
+	~InputController();
+
+private:
+	Ogre::RenderWindow* window; 
+        Ogre::SceneNode* node; // listens to events at this node!
+	OIS::InputManager* input_manager;
+	OIS::Keyboard* keyboard;
+};
 
 #endif
+
 
 
 

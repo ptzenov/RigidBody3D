@@ -3,8 +3,6 @@ project(opengltraining)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "--std=c++11")
 set(CMAKE_CXX "g++")
-set(OIS_LIBRARY_DIRS "/usr/lib/x86_64-linux-gnu")
-
 
 set(OPENGL false)
 
@@ -31,8 +29,10 @@ if(OPENGL)
 else(OPENGL)
 	message(STATUS "OGRE build")
 	find_package(OGRE 1.10 REQUIRED)
+	find_package(OIS)
 	include_directories(
 		${OGRE_INCLUDE_DIRS} 
+		${OIS_INCLUDE_DIRS}
 		)
 	link_directories(
 		${CMAKE_LIBRARY_DIRS}
@@ -46,5 +46,23 @@ endif(OPENGL)
 set(PRJNAME "RigidBody3D")
 set(SOURCE "src/main.cpp" "src/renderer.cpp")
 add_executable(${PRJNAME} ${SOURCE})
-target_link_libraries(${PRJNAME} ${OGRE_LIBRARIES} "OIS")
+
+
+if(OPENGL)
+if (OPENGL_FOUND)
+	include_directories(${OPENGL_INDLUCE_DIRS})
+	target_link_libraries (${PRJNAME} ${OPENGL_LIBRARIES})
+endif(OPENGL_FOUND)
+if (GLUT_FOUND)
+	include_directories(${GLUT_INCLUDE_DIRS})
+	target_link_libraries (${PRJNAME} ${GLUT_LIBRARIES})
+endif (GLUT_FOUND)
+if (GLEW_FOUND)
+	include_directories(${GLEW_INCLUDE_DIRS})
+	target_link_libraries (${PRJNAME} ${GLEW_LIBRARIES})
+endif (GLEW_FOUND)
+else(OPENGL)
+	include_directories(${OGRE_INCLUDE_DIRS})
+	target_link_libraries (${PRJNAME} ${OGRE_LIBRARIES})
+endif(OPENGL)
 
