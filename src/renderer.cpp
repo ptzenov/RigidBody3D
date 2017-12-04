@@ -1,19 +1,19 @@
 #include "renderer.hpp"
+#include "inputs.hpp"
+#include "common.hpp"
+
 #include <iostream>
 
-void SceneRenderer::create_plane(Ogre::Vector3 normal)
+void SceneRenderer::createPlane(Ogre::Vector3 normal)
 {
         Ogre::MeshManager::getSingleton().createPlane("plane",Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                         Ogre::Plane(normal,-50), 1500,1500,20,20,true,1,5,5,Ogre::Vector3::UNIT_Z);
         entities["plane"] = sceneMgr->createEntity("plane","plane");
 
-
         scene_graph["planeNode"] = rootNode->createChildSceneNode();
         scene_graph["planeNode"]->attachObject(entities["plane"]);
         entities["plane"]->setMaterialName("Examples/BeachStones"); // jpeg
-
 }
-
 
 
 void SceneRenderer::createScene()
@@ -22,16 +22,13 @@ void SceneRenderer::createScene()
         window = app_root->initialise(true,"testapp");
         sceneMgr = app_root->createSceneManager();
         rootNode = sceneMgr->getRootSceneNode();
-        frame_listeners["rootListener"] = std::unique_ptr<Ogre::FrameListener>( new InputController(rootNode,window));
-	app_root->addFrameListener(frame_listeners["rootListener"].get());
-        
-	/**
+
+        /**
          * Manually add the resource group
          * Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Blender");
          * Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "/home/kenny/Documents/BlenderModels/", "FileSystem", "Blender");
          * Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Blender");
          * Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Blender");
-         *
          **/
 
         // setup the camera(s)
@@ -48,7 +45,12 @@ void SceneRenderer::createScene()
 
         rootNode->setPosition(Ogre::Vector3 {0.0f,0.0f,0.0f});
 
-        create_plane();
+        createPlane();
+
+        light_sources["DirLight"] = sceneMgr->createLight("DirLigth");
+        light_sources["DirLight"]->setType(Ogre::Light::LT_DIRECTIONAL);
+        light_sources["DirLight"]->setDiffuseColour(1.,1.,1.0);
+        light_sources["DirLight"]->setDirection(0.0f,0.0f,0.0f);
 
         light_sources["PointLight"] =  sceneMgr->createLight("PointLight");
         light_sources["PointLight"]->setType(Ogre::Light::LT_POINT);
@@ -68,22 +70,33 @@ void SceneRenderer::createScene()
         scene_graph["ballNode"]->attachObject(entities["ball"]);
         scene_graph["ballNode"]->attachObject(light_sources["PointLight"]);
 
-        // add shadows
+	frame_listeners["rootListener"] = std::unique_ptr<InputController>(new InputController(window,rootNode));
+        frame_listeners["rootListener"]->registerController(GENERAL);
+	app_root->addFrameListener(frame_listeners["rootListener"].get());
+	
+	frame_listeners["ballListener"] = std::unique_ptr<InputController>(new InputController(window,scene_graph["ballNode"]));
+        
+	frame_listeners["ballListener"]->registerController(MOTION);
+        frame_listeners["ballListener"]->registerController(GENERAL);
+        frame_listeners["ballListener"]->registerController(CAMERA);
+       
+       	app_root->addFrameListener(frame_listeners["ballListener"].get());
+        
+	// add shadows
         sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
         scene_created = true;
 }
+
 
 void SceneRenderer::renderScene()
 {
         if( !scene_created)
                 std::cout<<"\nCannot render scene before actually drawing it! \n";
         else
-        {
                 app_root->startRendering();
-        }
 }
 
-void SceneRenderer::read_configs(Ogre::String filename)
+void SceneRenderer::readConfigs(Ogre::String filename)
 {
         // load cfg file and add to resource manager!
         Ogre::ConfigFile cf;
@@ -109,44 +122,5 @@ void SceneRenderer::read_configs(Ogre::String filename)
         // Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
         // Initialise materials -> ogre fails here?
 }
-
-/*------------------------------ INPUT CONTROLLER ----------------*/
-
-InputController::InputController(Ogre::SceneNode* nde,Ogre::RenderWindow* wdow)
-        :
-        window {wdow},
-       node {nde},
-       input_manager {nullptr},
-keyboard {nullptr}
-{
-        // create OIS objects
-        size_t windowHandle;
-        std::stringstream windowHndStr;
-        window->getCustomAttribute("WINDOW",&windowHandle);
-        input_manager = OIS::InputManager::createInputSystem(windowHandle);
-        keyboard  = static_cast<OIS::Keyboard*> (input_manager->createInputObject(OIS::OISKeyboard,false));
-
-}
-
-InputController::~InputController()
-{
-        input_manager->destroyInputObject(keyboard);
-        OIS::InputManager::destroyInputSystem(input_manager);
-}
-bool InputController::frameStarted(const Ogre::FrameEvent & evt)
-{
-        keyboard->capture();
-        if (keyboard->isKeyDown(OIS::KC_ESCAPE))
-                return false;
-        return true;
-}
-
-
-
-
-
-
-
-
 
 

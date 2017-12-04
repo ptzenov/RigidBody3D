@@ -3,6 +3,8 @@ project(opengltraining)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "--std=c++11")
 set(CMAKE_CXX "g++")
+
+set(CMAKE_BUILD_TYPE "Debug")
 set(OIS_LIBRARY_DIRS "/usr/lib/x86_64-linux-gnu")
 
 
@@ -44,7 +46,9 @@ else(OPENGL)
 endif(OPENGL)
 
 set(PRJNAME "RigidBody3D")
-set(SOURCE "src/main.cpp" "src/renderer.cpp")
+#set(SOURCE "src/main.cpp" "src/renderer.cpp" "src/inputs.cpp")
+file(GLOB SOURCE "src/*.cpp")
+
 add_executable(${PRJNAME} ${SOURCE})
 target_link_libraries(${PRJNAME} ${OGRE_LIBRARIES} "OIS")
 
