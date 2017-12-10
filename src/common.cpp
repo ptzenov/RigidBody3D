@@ -1,7 +1,15 @@
-#include "common.hpp"
+#include <common.hpp>
 
-void dbg_msg(const char * msg, const char* file, int line)
+/**
+ * Compares two strings for equality. 
+ * @param c1
+ * @param c2 
+ * @returns true if c1 is syntactically equal to c2 and false otherwise.
+ */
+bool compStr(const char* c1, const char* c2)
 {
-        std::cout<<"<FILE(" << file << "); LINE("<< line << ");MSG(" <<  msg << ")>" << std::endl;
+	return std::string(c1).compare(c2) == 0;	
 }
+
+
 

@@ -1,0 +1,156 @@
+	
+	Project specification for Freelancer:
+	*************************************
+							
+	Type of project: C or C++ programming.
+										
+	Platform: Linux
+
+	Deliverables: 	Tested and verified source code along with documentation.
+					Detailed documentation for installation and operation.
+								  
+	Time frame: 7 days
+	
+	
+	********
+	Summary:
+	********
+							
+	A freelancer with strong mathematics and physics skills is needed to write a program 
+	for an experiment being done on the Linux platform. 
+	Language can be either C or C++.
+	
+	This program models the state and location of an hypothetical object in a 3D space.
+	The object can be instruction to move, either in a line, arc or a helix.
+	
+	********
+	Details:
+	********
+	
+	This program continuously calculates the position, state of motion, movement and trajectory.
+	Calculations will be based on trapezoidal trajectory profiles.
+	
+	The program operated by passing it instructions and queries.
+	These are simple strings which are designed to require minimal parsing.
+	
+	The calculation is run continuously, but iteratively.
+	Each iteration is based on time, referred to as the "time base".
+	Between each iteration, the program can respond to instructions.
+	For example, changing to a new velocity or requesting a specific state variable.
+	
+	As new values are programmed the behaviour of the objects motion must change.
+	
+	Parameters will be given to this "solver" which define needed details such as 
+	maximum velocity, acceleration, deceleration and position.
+	
+			
+	You must be comfortable parsing strings for instructions and using a named pipe for IPC.
+	You will need to understand how to interpolate lines, arcs/circles and a helix.
+	You will plan and execute a motion trajectory for a line, arc/circle or a helix.
+			
+	This program would preferably run as a background process.
+	For testing we would used name pipes to confirm its correct operation.
+	You would have to write this test interface as well.
+	These would use named pipes to communicate.
+	
+	The instructions and query format is basic.
+	
+	For example:
+		
+		SET_ACCELERATION(1.2650)   this is an instruction from the user interface to the solver.
+		GET_ACCELERATION			this is an instruction from the user interface to the solver requesting data.
+		ACCELERATION=1.25600		this is the reply of the solver to the request above.
+	
+	
+	*************************************
+	Instructions which must be supported:
+	*************************************
+	The names be obvious, please ask if you don't understand.
+	We can discuss each.
+	The interface is very verbose, but I cannot change it.
+	
+	
+	
+	SET MOVE TYPE SELECTOR					You specify LINEAR, ARC, HELIX or SEQUENTIAL2
+	
+	MOVE 									Causes a move of the set type. Values are absolute.
+											Sequential2 results in movement along X and Y then Z.
+											This does not follow a coordinated interpolation between each axis.
+											Occurs at velocity #2
+
+	STEP RELATIVE X							Causes a linear movement to occur. Value is a relative input. 
+	STEP RELATIVE Y							
+	STEP RELATIVE Z
+											
+	START CONTINUOUS LINEAR MOVE X
+	STOP CONTINUOUS LINEAR MOVE X
+	START CONTINUOUS LINEAR MOVE Y
+	STOP CONTINUOUS LINEAR MOVE Y
+	START CONTINUOUS LINEAR MOVE Z
+	STOP CONTINUOUS LINEAR MOVE Z
+	
+	SET ACCELERATION/DECELERATION #1
+	SET ACCELERATION/DECELERATION #2
+	
+	SET ACCELERATION SELECTOR TO #1
+	SET ACCELERATION SELECTOR TO #2
+	
+	SET ACCELERATION/DECELEATION RAMP ON		This dictates if accel/decel calcs will be performed or not.
+	SET ACCELERATION/DECELERATION RAMP OFF		This only applies to LINEAR type movements.
+	
+	SET PLANE SELECT TO XY
+	SET PLANE SELECT TO XZ
+	SET PLANE SELECT TO YZ
+	
+	SET VELOCITY #1
+	SET VELOCITY #2
+	
+	SET VELOCITY SCALE #1
+	SET VELOCITY SCALE #2
+	
+	SET POSITION X
+	SET POSITION Y
+	SET POSITION Z
+	
+	SET AXIS POSITIVE RANGE X
+	SET AXIS POSITIVE RANGE Y
+	SET AXIS POSITIVE RANGE Z
+	
+	SET AXIS NEGATIVE RANGE X
+	SET AXIS NEGATIVE RANGE Y
+	SET AXIS NEGATIVE RANGE Z
+		
+	GET POSITION X
+	GET POSITION Y
+	GET POSITION Z
+	
+	GET DELTA ACCELERATION X
+	GET DELTA ACCELERATION Y
+	GET DELTA ACCELERATION Z
+	
+	GET DELTA VELOCITY X
+	GET DELTA VELOCITY Y
+	GET DELTA VELOCITY Z
+	
+	GET ACCELERATION SELECTOR					These selectors report the state 	programmed by the corresponding SET instructions. 
+	GET PLANE SELECTOR
+	GET RAMP SELECTOR
+	
+	GET VELOCITY SCALE #1
+	GET VELOCITY SCALE #2
+	
+	
+	
+	
+				
+		
+		
+		
+		
+				
+			
+				
+				
+	
+	
+	

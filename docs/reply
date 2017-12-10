@@ -1,0 +1,38 @@
+There was no problem with the milestone, I simply got confused and canceled it by mistake. Nevermind, I guess you can deliver the full amount upon completion of the project.
+
+About the actual work to be done, there is how I imagine the whole solver program - lets name it motion3D for brevity :
+
+Here are the points that are more or less clear
+
+ - motion3D is supposed to be a 3-dimensional rigid motion simulator in which a hypothetical rigid body or simply  "a particle" can follow 4 types of movement trajectories: linear trajectory, circular trajectory, helical trajectory and sequential trajectory. 
+
+ - the simulation should run continuously, but in iterations, with each iteration having a fixed time interval or as you call it the "time base". 
+
+ - The simulation parameters, such as position, acceleration, velociy, trajectory type etc. should be set/queried runtime via IPC pipeline, and the behaviour of the particle in motion should change accordingly.
+
+There are some things about the trajectory planning that I do not completely understand. 
+	
+	Between iterations, 	
+
+ 	STEP RELATIVE X 0.5 --> the particle should move 0.5 units relative to current position in positive x direction but with what velocity and what acceleration? One could assume that for trajectory profile computations one could use the current acceleration and velocity, but what if those values do not allow for a move 0.5 units in the positive x direction? For instance what if current velocity and acceleration are both 0? How should the program handle such erroneous input. 
+
+ 	Also I am not sure about the meaning of the following commands:
+
+ 		SET AXIS POSITIVE/NEGATIVE RANGE X
+		SET VELOCITY SCALE #1
+		SET PLANE SELECT TO XY
+		SET ACCELERATION/DECELEATION RAMP ON/OFF		
+
+
+- The full list of supported user input commands should be as specified in the description file "motion3.txt" that comes with the project description.  
+
+- for visualization of the simulation, motion3D should provide realtime rendering of the particle with openGL
+
+- motion3D should be tailored to run on Linux platforms, and should come with full documentation and installation instructions. 
+
+
+
+I have a couple of other questions, but I feel that once I get down to work things will become clearer. Lets do like this: As a first attemt to satisfying your specifications, I will implement only the linear trajectory motion and send you the codes to get your feedback. In this way you can correct me if I have misunderstood something along the way. 
+
+That will be all for now. Ill get back to you asap. 
+ 
